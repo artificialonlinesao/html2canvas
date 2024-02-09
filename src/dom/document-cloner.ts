@@ -492,7 +492,7 @@ export class DocumentCloner {
             container.src = 'about:blank';
             if (iframe) {
                 iframe.document.write('');
-                iframe.document.clear();
+                iframe.document.close();
                 iframe.close();
             }
         } catch {}
