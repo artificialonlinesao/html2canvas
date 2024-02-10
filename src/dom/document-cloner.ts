@@ -129,16 +129,23 @@ export class DocumentCloner {
             return iframe;
         });
 
-        const adoptedNode = documentClone.adoptNode(this.documentElement);
         /**
          * The baseURI of the document will be lost after documentClone.open().
          * We can avoid it by adding <base> element.
          * */
-        addBase(adoptedNode, documentClone);
+        const baseURI = documentClone.baseURI;
+
         documentClone.open();
         documentClone.write(`${serializeDoctype(document.doctype)}<html></html>`);
         // Chrome scrolls the parent document for some reason after the write to the cloned window???
         restoreOwnerScroll(this.referenceElement.ownerDocument, scrollX, scrollY);
+
+        const adoptedNode = documentClone.adoptNode(this.documentElement);
+        const baseNode = documentClone.createElement('base');
+        baseNode.href = baseURI;
+        const headEle = adoptedNode.getElementsByTagName('head').item(0);
+        headEle?.insertBefore(baseNode, headEle?.firstChild ?? null);
+
         documentClone.replaceChild(adoptedNode, documentClone.documentElement);
         documentClone.close();
 
@@ -640,11 +647,4 @@ const createStyles = (body: HTMLElement, styles: string) => {
         style.textContent = styles;
         body.appendChild(style);
     }
-};
-
-const addBase = (targetELement: HTMLElement, referenceDocument: Document) => {
-    const baseNode = referenceDocument.createElement('base');
-    baseNode.href = referenceDocument.baseURI;
-    const headEle = targetELement.getElementsByTagName('head').item(0);
-    headEle?.insertBefore(baseNode, headEle?.firstChild ?? null);
 };
