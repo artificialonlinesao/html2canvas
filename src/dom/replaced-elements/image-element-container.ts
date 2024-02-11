@@ -4,8 +4,8 @@ import {serializeSvg, deserializeSvg} from '../../core/features';
 
 export class ImageElementContainer extends ElementContainer {
     src: string;
-    intrinsicWidth: number = 0;
-    intrinsicHeight: number = 0;
+    intrinsicWidth = 0;
+    intrinsicHeight = 0;
     isSVG: boolean;
 
     private static SVG = /\.svg(?:\?.*)?$/i;
@@ -22,7 +22,7 @@ export class ImageElementContainer extends ElementContainer {
     private isInlinedSvg = () => ImageElementContainer.INLINED_SVG.test(this.src);
     private isSvg = () => ImageElementContainer.SVG.test(this.src);
 
-    public setup(img: HTMLImageElement) {
+    setup(img: HTMLImageElement): void {
         if (this.isSvg()) return;
 
         if (this.isInlinedSvg()) {
