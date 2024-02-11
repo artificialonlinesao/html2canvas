@@ -1,6 +1,7 @@
 import {ElementContainer} from '../element-container';
 import {parseBounds} from '../../css/layout/bounds';
 import {Context} from '../../core/context';
+import {serializeSvg} from '../../core/features';
 
 export class SVGElementContainer extends ElementContainer {
     svg: string;
@@ -9,7 +10,7 @@ export class SVGElementContainer extends ElementContainer {
 
     constructor(context: Context, img: SVGSVGElement) {
         super(context, img);
-        const s = new XMLSerializer();
+
         const bounds = parseBounds(context, img);
         const originPosition: string = img.style.position;
         img.setAttribute('width', `${bounds.width}px`);
@@ -20,7 +21,7 @@ export class SVGElementContainer extends ElementContainer {
         // so, it is necessary to eliminate positioning before serialization.
         img.style.position = 'initial';
 
-        this.svg = `data:image/svg+xml,${encodeURIComponent(s.serializeToString(img))}`;
+        this.svg = serializeSvg(img);
 
         // reset position
         img.style.position = originPosition;
