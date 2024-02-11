@@ -93,9 +93,7 @@ export class Cache {
                 img.crossOrigin = 'anonymous';
             }
             img.src = src;
-            if (/^data:/.test(src)) {
-                resolve(img);
-            } else if (img.complete === true) {
+            if (img.complete === true) {
                 // Inline XML images may fail to parse, throwing an Error later on
                 setTimeout(() => resolve(img), 500);
             }
