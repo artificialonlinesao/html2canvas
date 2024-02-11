@@ -9,6 +9,7 @@ const SAMPLE_TEXT = 'Hidden Text';
 export class FontMetrics {
     private readonly _data: {[key: string]: FontMetric};
     private readonly _document: Document;
+    private static IS_FIRE_FOX = /firefox/i.test(navigator?.userAgent);
 
     constructor(document: Document) {
         this._data = {};
@@ -54,7 +55,7 @@ export class FontMetrics {
         span.appendChild(this._document.createTextNode(SAMPLE_TEXT));
         container.appendChild(span);
         container.appendChild(img);
-        const baseline = img.offsetTop - span.offsetTop + 1;
+        const baseline = img.offsetTop - span.offsetTop + (FontMetrics.IS_FIRE_FOX ? 2 : 1);
 
         container.removeChild(span);
         container.appendChild(this._document.createTextNode(SAMPLE_TEXT));
@@ -62,7 +63,7 @@ export class FontMetrics {
         container.style.lineHeight = 'normal';
         img.style.verticalAlign = 'super';
 
-        const middle = img.offsetTop - container.offsetTop + 1;
+        const middle = img.offsetTop - container.offsetTop + (FontMetrics.IS_FIRE_FOX ? 2 : 1);
 
         body.removeChild(container);
 
